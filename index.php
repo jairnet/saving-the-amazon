@@ -1,3 +1,20 @@
+<?php
+    session_start();
+    require 'database.php';
+
+    if (isset($_SESSION['user_id'])) {
+        $query = 'SELECT id, email, password FROM users WHERE id = :id';
+        $records = $conn->prepare($query);
+        $records->bindParam(':id',$_SESSION['user_id']);
+        $records->execute();
+        $results = $records->fetch(PDO::FETCH_ASSOC);
+        $user = null;
+
+        if (count($results) >0) {
+            $user = $results;
+        }
+    }
+?>
 <!doctype html>
 <html lang="en" class="h-100">
   <head>
@@ -57,10 +74,18 @@
         <div class="col-md-10">
             <h1 class="mt-5">Saving the Amazon</h1>
         </div>
-    </div> 
-    <p class="lead">El modulo de PQR's requiere que ingreses tus credenciales si no tienes registrate.</p>
-    <p>Si ya estas registrado <a href="login.php">ingresa aquí</a> para al modulo de PQR.</p>
-    <p>Registrarme <a href="signup.php">aquí</a> para acceder.</p>
+    </div>
+    <p class="lead">El modulo de PQR.</p>
+
+    <?php if(empty($user)): ?>
+      <p>Si ya estas registrado <a href="login.php">ingresa aquí</a> para al modulo de PQR.</p>
+      <p>Registrarme <a href="signup.php">aquí</a> para acceder.</p>
+    <?php endif; ?>
+
+    <?php if(!empty($user)): ?>
+      <p>Revisa <a href="dashboard.php">aquí </a>tus PQR's.</p>
+    <?php endif; ?>
+    
   </div>
 </main>
     

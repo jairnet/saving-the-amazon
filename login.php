@@ -7,8 +7,10 @@
         $records->execute();
         $results = $records->fetch(PDO::FETCH_ASSOC);
         $message = '';
-        print_r($results);
-        if (count($results)>0 and password_verify($_POST['password'], $results['password'])) {
+        $passwordValidate = password_verify($_POST['password'], $results['password']);
+        // print_r('$passwordValidate');
+        // print_r(count($results));
+        if (count($results)>0 and $passwordValidate) {
           $_SESSION['user_id'] = $results['id'];
           header('location:dashboard.php');
         }else{
@@ -58,12 +60,14 @@
   <body class="text-center">
     
 <main class="form-signin">
-  <?php if(!empty($message)): ?>
-    <p><?= $message ?></p>
-  <?php endif; ?>
+  
   <form action="login.php" method="POST">
     <a href="index.php" ><img class="mb-4" src="assets/img/logo.png" alt="" width="82" height="67"></a>
-   
+    
+    <?php if(!empty($message)): ?>
+      <p><?= $message ?></p>
+    <?php endif; ?>
+
     <label for="inputEmail" class="visually-hidden">Correo Electrónico</label>
     <input type="email" id="inputEmail" class="form-control" name="email" placeholder="Correo Electronico" required autofocus>
     <label for="inputPassword" class="visually-hidden">Contraseña</label>

@@ -1,8 +1,14 @@
 <?php
     session_start();
     require 'database.php';
-
     if (isset($_SESSION['user_id'])) {
+        $queryPQR = 'SELECT * FROM pqrs WHERE user_id = :id';
+        $recordsPQR = $conn->prepare($queryPQR);
+        $recordsPQR->bindParam(':id',$_SESSION['user_id']);
+        $recordsPQR->execute();
+        $resultsPQR = $recordsPQR->fetchAll();
+        
+
         $query = 'SELECT id, email, password, role FROM users WHERE id = :id';
         $records = $conn->prepare($query);
         $records->bindParam(':id',$_SESSION['user_id']);
@@ -64,27 +70,46 @@
     <header class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom shadow-sm">
         <p class="h5 my-0 me-md-auto fw-normal">Saving the Amazon</p>
         <nav class="my-2 my-md-0 me-md-3">
-          <a class="p-2 text-dark"><?= $user['role'] ?> -></a>
-          <a class="p-2 text-dark"><?= $user['email'] ?></a>
+            <a class="p-2 text-dark"><?= $user['role'] ?> -></a>
+            <a class="p-2 text-dark"><?= $user['email'] ?></a>
         </nav>
         <a class="btn btn-outline-success" href="logout.php">Salir</a>
     </header>
     <!-- Begin page content -->
     <main class="flex-shrink-0">
     <div class="container">
-        <?php if($user['role'] == 'admin'): ?>
-            <div class="d-grid gap-2 col-6 mx-auto">
-                <a class="btn btn-info" href="createPQR.php">Crear PQR</a>
-                <a class="btn btn-secondary" href="listPQR.php">Listar PQR</a>
-            </div>
-        <?php endif; ?>
-      
-        <?php if($user['role'] == 'user'): ?>
-            <div class="d-grid gap-2 col-6 mx-auto">
-                <a class="btn btn-secondary" href="listPQRUser.php">Listar PQR</a>
-            </div>
-        <?php endif; ?>
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="dashboard.php">Inicio</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Lista PQR's</li>
+            </ol>
+        </nav>
+        
+        <table class="table">
+            <thead>
+                <tr>
+                <th scope="col">#</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Asunto</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Fecha Creación</th>
+                <th scope="col">Fecha Limite</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($resultsPQR as $key => $value) { ?>
+                    <tr>
 
+                    <th scope="row"><?=$value['id'];?></th>
+                    <td><?=$value['type'];?></td>
+                    <td><?=$value['topic'];?></td>
+                    <td><?=$value['state'];?></td>
+                    <td><?=$value['date_create'];?></td>
+                    <td><?=$value['date_limit'];?></td>
+                    </tr>
+                <?php } ?>
+            </tbody>
+        </table>
     </div>
     </main>
     <?php endif; ?>

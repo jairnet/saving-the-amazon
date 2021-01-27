@@ -1,5 +1,6 @@
 <?php
-
-print_r('<h1>Te saliste perra!!!</h1>');
-
+    session_start();
+    session_unset();
+    session_destroy();
+    header('location:index.php');
 ?>
