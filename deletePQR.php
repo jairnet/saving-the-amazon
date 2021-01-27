@@ -6,7 +6,6 @@
     $recordsPQR = $conn->prepare($queryPQR);
     $recordsPQR->bindParam(':id',$id);
     if ($recordsPQR->execute()){
-        print_r('Aqui');
         header('location:listPQR.php');
     }
 ?>

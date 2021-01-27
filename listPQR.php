@@ -93,19 +93,26 @@
                 <th scope="col">Estado</th>
                 <th scope="col">Fecha Creación</th>
                 <th scope="col">Fecha Limite</th>
+                <th scope="col">Notificar Usuario</th>
                 </tr>
             </thead>
             <tbody>
                 <?php foreach ($resultsPQR as $key => $value) { ?>
                     <tr>
-
                     <th scope="row"><?=$value['id'];?></th>
                     <td><?=$value['type'];?></td>
                     <td><?=$value['topic'];?></td>
                     <td><?=$value['state'];?></td>
                     <td><?=$value['date_create'];?></td>
                     <td><?=$value['date_limit'];?></td>
-                    <td><a href="editPQR.php?id=<?php echo $value['id']; ?>" class="btn btn-outline-success">Editar</a></td>
+                    <td><a href="notifyPQR.php?id=<?php echo $value['id']; ?>" class="btn btn-outline-info">Enviar</a></td>
+                    <?php if($value['state']=='cerrado'): ?>
+                      <td><button type="button" class="btn btn-outline-success" disabled>Editar</button></td>
+                    <?php endif; ?>
+                    <?php if($value['state']!='cerrado'): ?>
+                      <td><a href="editPQR.php?id=<?php echo $value['id']; ?>" class="btn btn-outline-success">Editar</a></td>
+                    <?php endif; ?>
+                    
                     <td><a href="deletePQR.php?id=<?php echo $value['id']; ?>" class="btn btn-outline-danger">Eliminar</a></td>
                     </tr>
                 <?php } ?>

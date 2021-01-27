@@ -30,12 +30,21 @@
         $stamentPQR->bindParam(':state',$_POST['estado'][0]);
         $stamentPQR->bindParam(':type',$_POST['tipo'][0]);
         $stamentPQR->bindParam(':date_create',$_POST['fechaCreacion']);
-        $stamentPQR->bindParam(':date_limit',$_POST['fechaLimite']);
+
+        if($_POST['tipo'][0] == 'peticion'){
+            $date_limit = date("Y-m-d",strtotime($_POST['fechaCreacion']."+ 7 days"));
+        }elseif($_POST['tipo'][0] == 'queja'){
+            $date_limit = date("Y-m-d",strtotime($_POST['fechaCreacion']."+ 3 days"));
+        }else{
+            $date_limit = date("Y-m-d",strtotime($_POST['fechaCreacion']."+ 2 days"));
+        }
+        $stamentPQR->bindParam(':date_limit', $date_limit);
         
         if($stamentPQR -> execute()){
+
             $message = 'Registro exitoso';
             }else{
-            $message = 'Error al registrarse';
+            $message = 'Error al crear el registro!';
             }
     }
 ?>
@@ -142,19 +151,19 @@
                 </select>
             </div>
 
-            <div class="col-md-6">
+            <div class="col-md-12">
                 <label for="example-date-input" class="col-2 col-form-label">Fecha creación</label>
                 <div class="col-10">
                     <input class="form-control" type="date" id="date-create" name="fechaCreacion">
                 </div>
             </div>
 
-            <div class="col-md-6">
+            <!-- <div class="col-md-6">
                 <label for="example-date-input" class="col-2 col-form-label">Fecha Limite</label>
                 <div class="col-10">
                     <input class="form-control" type="date" id="date-limite" name="fechaLimite">
                 </div>
-            </div>
+            </div> -->
 
             <div class="col-12">
                 <button class="btn btn-success" type="submit">Crear PQR</button>
